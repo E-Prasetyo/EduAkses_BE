@@ -46,7 +46,8 @@ class UsersService {
   async getUserById(userId) {
 
     const query = {
-      text: 'SELECT id, email, fullname, role FROM users WHERE id = $1',
+      text: `SELECT u.id, u.email, u.fullname, r.name as role FROM users u
+              JOIN roles r ON r.id = u.role_id WHERE u.id = $1`,
       values: [userId],
     };
 
@@ -61,8 +62,9 @@ class UsersService {
 
   async verifyUserCredential(username, password) {
     const query = {
-      text: 'SELECT id, password FROM users WHERE email = $1',
-      values: [username],
+      text: `SELECT u.id, r.name as role, password FROM users u
+              JOIN roles r ON r.id = u.role_id  WHERE u.email = $1`,
+      values: [username]
     };
 
     const result = await this._pool.query(query);
@@ -71,7 +73,7 @@ class UsersService {
       throw new AuthenticationError('Kredensial yang Anda berikan salah');
     }
 
-    const { id, password: hashedPassword } = result.rows[0];
+    const { id, role, password: hashedPassword } = result.rows[0];
 
     const match = await bcrypt.compare(password, hashedPassword);
 
@@ -79,12 +81,12 @@ class UsersService {
       throw new AuthenticationError('Kredensial yang Anda berikan salah');
     }
 
-    return id;
+    return { id, role }
   }
 
   async getUsersByUsername(username) {
       const query = {
-        text: 'SELECT id, username, fullname FROM users WHERE username LIKE $1',
+        text: 'SELECT id, email, fullname FROM users WHERE UPPER(fullname) LIKE UPPER($1)',
         values: [`%${username}%`],
       };
       const result = await this._pool.query(query);
