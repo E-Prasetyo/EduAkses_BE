@@ -75,6 +75,7 @@ const init = async () => {
   server.ext('onPreResponse', (request, h) => {
     
     const { response } = request;
+    console.log(response);
 
     if (response instanceof Error) {
 
