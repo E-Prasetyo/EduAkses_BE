@@ -1,4 +1,4 @@
-const { validationPassword  } = require('../../utils')
+const { validationPassword, validationEmail } = require('../../utils')
 
 class UsersHandler {
   constructor(service, validator) {
@@ -11,12 +11,22 @@ class UsersHandler {
     
     this._validator.validateRegisterPayload(request.payload);
     const role = 'roles-yPswyBdxAgcMLzZD';
+    
     const { email, password, confirmPassword, fullname } = request.payload;
 
     if (!validationPassword(password, confirmPassword)) {
       const response = h.response({
         status: 'fail',
-        message: 'Password dan confirm password, berbeda',
+        message: 'Password dan confirm password, berbeda. minimal password 8 karakter',
+      });
+      response.code(404);
+      return response;
+    }
+
+    if(!validationEmail(email)) {
+      const response = h.response({
+        status: 'fail',
+        message: 'Email tidak valid',
       });
       response.code(404);
       return response;
@@ -43,13 +53,22 @@ class UsersHandler {
     if (!validationPassword(password, confirmPassword)) {
       const response = h.response({
         status: 'fail',
-        message: 'Password dan confirm password, berbeda',
+        message: 'Password dan confirm password, berbeda. minimal password 8 karakter',
       });
       response.code(404);
       return response;
     }
 
-   const userId = await this._service.addRegister({ email, password, fullname, role });
+    if(!validationEmail(email)) {
+      const response = h.response({
+        status: 'fail',
+        message: 'Email tidak valid',
+      });
+      response.code(404);
+      return response;
+    }
+
+  const userId = await this._service.addRegister({ email, password, fullname, role });
 
     const response = h.response({
       status: 'success',

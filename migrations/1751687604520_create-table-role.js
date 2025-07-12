@@ -1,14 +1,14 @@
 /**
  * @type {import('node-pg-migrate').ColumnDefinitions | undefined}
  */
-export const shorthands = undefined;
+//export const shorthands = undefined;
 
 /**
  * @param pgm {import('node-pg-migrate').MigrationBuilder}
  * @param run {() => void | undefined}
  * @returns {Promise<void> | void}
  */
-export const up = (pgm) => {
+const up = (pgm) => {
     pgm.createTable('roles', {
         id: {
             type: 'VARCHAR(50)',
@@ -25,11 +25,11 @@ export const up = (pgm) => {
     });
 
     pgm.sql(`
-        INSERT INTO roles (id, name, created_at) VALUES
-          ('roles-hHojf464QC0r1sH8', 'admin', CURRENT_TIMESTAMP),
-          ('roles-yPswyBdxAgcMLzZD', 'user', CURRENT_TIMESTAMP),
-          ('roles-Le54FgTGwBVlz_9x', 'lecture', CURRENT_TIMESTAMP)
-      `);
+    INSERT INTO roles (id, name, created_at) VALUES
+        ('roles-hHojf464QC0r1sH8', 'admin', CURRENT_TIMESTAMP),
+        ('roles-yPswyBdxAgcMLzZD', 'user', CURRENT_TIMESTAMP),
+        ('roles-Le54FgTGwBVlz_9x', 'lecture', CURRENT_TIMESTAMP)
+    `);
 
     pgm.renameColumn('users', 'role', 'role_id');
 
@@ -51,6 +51,8 @@ export const up = (pgm) => {
  * @param run {() => void | undefined}
  * @returns {Promise<void> | void}
  */
-export const down = (pgm) => {
+const down = (pgm) => {
     pgm.dropTable('roles');
 };
+
+module.exports = { up, down };

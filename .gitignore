@@ -1,3 +1,16 @@
 node_modules
 *node_modules/*
 notes-api-webserver.pem
+
+src/api/kategori
+src/services/ContentService
+src/services/KategoriService
+src/validator/kategori
+
+migrations/1752223305398_create-kategori-table.js
+migrations/1752223449215_create-content-table
+migrations/1752224033010_create-materi-table
+migrations/1752224252626_create-quizzes-table
+migrations/1752224393006_create-questions-table
+migrations/1752224464923_create-options-table
+migrations/1752286745639_create-user-question-table
