@@ -1,7 +1,6 @@
 const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
 const InvariantError = require('../exceptions/InvariantError');
-const { values } = require('prelude-ls');
 const NotFoundError = require('../exceptions/NotFoundError');
 
 class RolesService {

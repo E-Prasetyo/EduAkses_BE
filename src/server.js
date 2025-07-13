@@ -2,6 +2,8 @@ const Hapi = require('@hapi/hapi');
 require('dotenv').config();
 const Jwt = require('@hapi/jwt');
 const AclAuth = require('hapi-acl-auth');
+const Inert = require('@hapi/inert');
+const path = require('path');
 
 //users
 const users = require('./api/users');
@@ -20,10 +22,28 @@ const roles = require('./api/roles');
 const RolesService = require('./services/RolesService');
 const RoleValidator = require('./validator/roles');
 
+// categories
+const categories = require('./api/categories');
+const CategoriesService = require('./services/CategoriesService');
+const CategoriesValidator = require('./validator/categories');
+
+// contents
+const contents = require('./api/contents');
+const ContentsService = require('./services/ContentsService');
+const ContentsValidator = require('./validator/contents');
+
+// uploads
+const uploads = require('./api/uploads');
+const StorageService = require('./services/storage/StorageService');
+const UploadsValidator = require('./validator/uploads');
+
 const init = async () => {
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
   const rolesService = new RolesService();
+  const categoriesService = new CategoriesService();
+  const contentsService = new ContentsService();
+  const storageService = new StorageService(path.resolve(__dirname, 'uploads/images'));
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -41,6 +61,9 @@ const init = async () => {
       plugin: Jwt,
     },
     {
+      plugin: Inert,
+    },
+    {
       plugin: AclAuth,
       options: {
         handler: async function (request) {
@@ -51,7 +74,7 @@ const init = async () => {
         // optional, dy default a simple 403 will be returned when not authorized
         forbiddenPageFunction: async function (credentials, request, h) {
           // some fancy "logging"
-          console.log(credentials)
+          //console.log(credentials)
           // some fancy error page
           const response = h.response('<h1>Not Authorized!</h1>')
           response.code(200)
@@ -103,7 +126,29 @@ const init = async () => {
         service: rolesService,
         validator: RoleValidator
       }
-    }
+    },
+    {
+      plugin: categories,
+      options: {
+        service: categoriesService,
+        validator: CategoriesValidator
+      }
+    },
+    {
+      plugin: contents,
+      options: {
+        service: contentsService,
+        validator: ContentsValidator,
+        storageService
+      }
+    },
+    {
+      plugin: uploads,
+      options: {
+        service: storageService,
+        validator: UploadsValidator,
+      },
+    },
   ]);
 
   server.ext('onPreResponse', (request, h) => {
