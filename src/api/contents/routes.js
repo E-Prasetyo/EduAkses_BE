@@ -23,14 +23,14 @@ const routes = (handler) => [
         method: "GET",
         path: "/api/contents",
         handler: (request, h) => handler.getAllContentsHandler(request, h),
-        options: {
-            auth: 'eduaksessapp_jwt',
-            plugins: {
-                hapiAclAuth: {
-                    roles: ['admin','lecture','user']
-                }
-            }
-        }
+        // options: {
+        //     auth: 'eduaksessapp_jwt',
+        //     plugins: {
+        //         hapiAclAuth: {
+        //             roles: ['admin','lecture','user']
+        //         }
+        //     }
+        // }
     },
     {
         method: "GET",
