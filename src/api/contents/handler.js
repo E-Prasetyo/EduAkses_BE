@@ -18,8 +18,6 @@ class ContentsHandler {
         }
         this._validator.validateContentPayload(dataValidation);
 
-        console.log(request.auth.credentials);
-
         const { id: credentialId } = request.auth.credentials;
         const fileName = await this._storageService.writeFile(request.payload.imageThumbnail, request.payload.imageThumbnail.hapi);
         
