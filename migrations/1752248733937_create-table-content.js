@@ -67,10 +67,6 @@ export const up = (pgm) => {
             type: 'varchar(50)',
             notNull: true
         },
-        material: {
-            type: 'TEXT',
-            notNull: false
-        },
         category_id: {
             type: 'varchar(50)',
             notNull: true,
@@ -153,13 +149,12 @@ export const up = (pgm) => {
         }
     })
 
-    // categories default
-    //pgm.sql(`
-    //    INSERT INTO roles (id, name, created_at, updated_at) VALUES
-    //      ('roles-hHojf464QC0r1sH8', 'admin', CURRENT_TIMESTAMP),
-    //      ('roles-yPswyBdxAgcMLzZD', 'user', CURRENT_TIMESTAMP),
-    //     ('roles-Le54FgTGwBVlz_9x', 'lecture', CURRENT_TIMESTAMP)
-    // `);
+    pgm.sql(`
+        INSERT INTO categories (id, title, created_at, updated_at) VALUES
+        ('cat-5TBsxJwBhp6E7ilg', 'Pemrograman Dasar', CURRENT_TIMESTAMP, NULL),
+        ('cat-yDXh-Y5CTQpb01tt', 'Desain UI/UX', CURRENT_TIMESTAMP, NULL),
+        ('cat-yDXhZJwBhp6E7ilg', 'Manajemen Proyek', CURRENT_TIMESTAMP, NULL);
+    `);
 };
 
 /**

@@ -37,6 +37,21 @@ class RoutesHandler {
         return response;
     }
 
+    async getRolesUsersHandler(request, h) {
+
+        const roles = await this._service.getAllRolesUsers();
+
+        const response = h.response({
+            status: 'success',
+            message: 'Roles berhasil di dapatkan',
+            data: {
+                roles
+            }
+        })
+        response.code(200);
+        return response;
+    }
+
     async putRolesHandler(request, h) {
         this._validator.validateRolesPayload(request.payload);
 

@@ -36,6 +36,21 @@ class RolesService {
         return result.rows;
     }
 
+    async getAllRolesUsers() {
+        const query = {
+            text: `
+                    SELECT
+                        id, name FROM roles
+                    WHERE 1=1
+                    AND (name LIKE '%user%' OR name LIKE '%lecture%')`
+        }
+
+        const result = await this._pool.query(query);
+
+        return result.rows;
+    }
+
+
 
     async putRoles(name, roleId) {
         const query = {

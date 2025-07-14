@@ -27,6 +27,7 @@
   "dependencies": {
     "@hapi/inert": "^7.1.0",
     "@hapi/jwt": "^3.2.0",
+    "@hapi/vision": "^7.0.3",
     "acorn": "^8.15.0",
     "acorn-jsx": "^5.3.2",
     "ajv": "^6.12.6",
@@ -72,6 +73,7 @@
     "get-caller-file": "^2.0.5",
     "glob": "^11.0.3",
     "glob-parent": "^5.1.2",
+    "hapi-swagger": "^17.3.2",
     "has-flag": "^3.0.0",
     "ignore": "^5.3.2",
     "ignore-by-default": "^1.0.1",

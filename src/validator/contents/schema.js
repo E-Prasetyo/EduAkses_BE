@@ -11,13 +11,23 @@ const PostContentSchemaPayload = Joi.object({
     imageThumbnail: Joi.string().valid('image/apng', 'image/avif', 'image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp').required(),
 }) 
 
+const PutContentSchemaPayload = Joi.object({
+    title: Joi.string(),
+    duration: Joi.number(),
+    description: Joi.string(),
+    video: Joi.string(),
+    level: Joi.string(),
+    categories: Joi.string(),
+    imageThumbnail: Joi.string(),
+}) 
+
 const postMaterialsIdPayloadSchema = Joi.object({
     title: Joi.string().required(),
     description: Joi.string().required(),
 })
 
 const postMaterialsPayloadSchema = Joi.object({
-    idContent: Joi.string(),
+    // idContent: Joi.string(),
     materials: Joi.array().items(
         Joi.object({
         title: Joi.string().required(),
@@ -35,6 +45,7 @@ const postMaterialsPayloadSchema = Joi.object({
 module.exports = {
     PostContentSchemaPayload,
     postMaterialsPayloadSchema,
-    postMaterialsIdPayloadSchema
+    postMaterialsIdPayloadSchema,
+    PutContentSchemaPayload
     //ImageHeadersSchema,
 }

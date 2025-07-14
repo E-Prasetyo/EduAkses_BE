@@ -36,13 +36,14 @@ const ContentsValidator = require('./validator/contents');
 const uploads = require('./api/uploads');
 const StorageService = require('./services/storage/StorageService');
 const UploadsValidator = require('./validator/uploads');
+const AuthenticationError = require('./exceptions/AuthenticationError');
 
 const init = async () => {
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
   const rolesService = new RolesService();
   const categoriesService = new CategoriesService();
-  const contentsService = new ContentsService();
+  const contentsService = new ContentsService(usersService);
   const storageService = new StorageService(path.resolve(__dirname, 'uploads/images'));
 
   const server = Hapi.server({
@@ -74,11 +75,9 @@ const init = async () => {
         // optional, dy default a simple 403 will be returned when not authorized
         forbiddenPageFunction: async function (credentials, request, h) {
           // some fancy "logging"
-          //console.log(credentials)
+          // console.log(credentials)
           // some fancy error page
-          const response = h.response('<h1>Not Authorized!</h1>')
-          response.code(200)
-          return response.takeover()
+          throw new AuthenticationError(`${request.auth.credentials.role}, Not Authorized!`)
         }
       }
     },

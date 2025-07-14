@@ -3,6 +3,7 @@ const {
     PostContentSchemaPayload,
     postMaterialsPayloadSchema,
     postMaterialsIdPayloadSchema,
+    PutContentSchemaPayload
    // ImageHeadersSchema
 } = require('./schema');
 
@@ -25,7 +26,13 @@ const ContentsValidate = {
         if (validationResult.error) {
             throw new InvariantError(validationResult.error.message);
         }
-    }
+    },
+    validatePutContentPayload: (payload) => {
+        const validationResult = PutContentSchemaPayload.validate(payload);
+        if (validationResult.error) {
+            throw new InvariantError(validationResult.error.message);
+        }
+    },
     //  validateImageHeaders: (headers) => {
     //      const validationResult = ImageHeadersSchema.validate(headers);  
     //      if (validationResult.error) {

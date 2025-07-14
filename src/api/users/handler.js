@@ -1,3 +1,4 @@
+const InvariantError = require('../../exceptions/InvariantError');
 const { validationPassword  } = require('../../utils')
 
 class UsersHandler {
@@ -10,16 +11,13 @@ class UsersHandler {
   async postRegisterHandler(request, h) {
     
     this._validator.validateRegisterPayload(request.payload);
+    
     const role = 'roles-yPswyBdxAgcMLzZD';
+
     const { email, password, confirmPassword, fullname } = request.payload;
 
     if (!validationPassword(password, confirmPassword)) {
-      const response = h.response({
-        status: 'fail',
-        message: 'Password dan confirm password, berbeda',
-      });
-      response.code(404);
-      return response;
+      throw new InvariantError('Password dan confirm password, berbeda')
     }
 
     const userId = await this._service.addRegister({ email, password, fullname, role });
@@ -41,12 +39,7 @@ class UsersHandler {
     const { email, password, confirmPassword, fullname, role } = request.payload;
 
     if (!validationPassword(password, confirmPassword)) {
-      const response = h.response({
-        status: 'fail',
-        message: 'Password dan confirm password, berbeda',
-      });
-      response.code(404);
-      return response;
+      throw new InvariantError('Password dan confirm password, berbeda')
     }
 
    const userId = await this._service.addRegister({ email, password, fullname, role });
@@ -90,6 +83,48 @@ class UsersHandler {
     });
     
     response.code(200);
+    return response;
+  }
+
+  async putUsersHandler(request, h) {
+    this._validator.validateAddUserPayload(request.payload);
+
+    const { email, password, confirmPassword, fullname } = request.payload;
+    const userLogin = request.auth.credentials;
+
+    if (!validationPassword(password, confirmPassword)) {
+      throw new InvariantError('Password dan confirm password, berbeda')
+    }
+
+    await this._service.putDataUsers({ idUser: userLogin.id, email, password, fullname }); 
+
+    const response = h.response({
+      status: 'success',
+      message: 'User berhasil dirubah'
+    });
+
+    response.code(201);
+    return response;
+  }
+
+  async putAdminHandler(request, h) {
+    this._validator.validateAddUserPayload(request.payload);
+
+    const { email, password, confirmPassword, fullname, role } = request.payload;
+    const { id: idUser } = request.params;
+
+    if (!validationPassword(password, confirmPassword)) {
+      throw new InvariantError('Password dan confirm password, berbeda')
+    }
+
+    await this._service.putDataUsersAdmin({ idUser, email, password, fullname, role }); 
+
+    const response = h.response({
+      status: 'success',
+      message: 'User berhasil dirubah',
+    });
+
+    response.code(201);
     return response;
   }
 }

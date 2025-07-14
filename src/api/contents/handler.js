@@ -18,6 +18,8 @@ class ContentsHandler {
         }
         this._validator.validateContentPayload(dataValidation);
 
+        console.log(request.auth.credentials);
+
         const { id: credentialId } = request.auth.credentials;
         const fileName = await this._storageService.writeFile(request.payload.imageThumbnail, request.payload.imageThumbnail.hapi);
         
@@ -27,7 +29,7 @@ class ContentsHandler {
 
         const response = h.response({
             status: 'success',
-            message: 'Role berhasil di tambahkan',
+            message: 'Content berhasil di tambahkan',
             data: {
               contentId 
             }
@@ -51,10 +53,43 @@ class ContentsHandler {
         return response;
     }
 
+    async getContentsByIdHandler(request, h) {
+        const { id: idContent } = request.params;
+
+        const content = await this._service.getContentsById(idContent);
+
+        const response = h.response({
+            status: 'success',
+            message: 'Data berhasil didapatkan',
+            data: {
+                content
+            }
+        })
+        response.code(200);
+        return response;
+    }
+
+    async getContentsByIdMaterialsHandler(request, h) {
+        const { id: idContent } = request.params;
+
+        const content = await this._service.getContentsByIdMaterials(idContent);
+
+        const response = h.response({
+            status: 'success',
+            message: 'Data berhasil didapatkan',
+            data: {
+                content
+            }
+        })
+        response.code(200);
+        return response;
+    }
+
     async postContentsMaterialHandler(request, h) {
         this._validator.validatePostMaterialsPayload(request.payload);
 
-        const { materials, idContent } = request.payload;
+        const { materials } = request.payload;
+        const { id: idContent } = request.params;
 
         const results = [];
 
@@ -66,7 +101,7 @@ class ContentsHandler {
 
         const response = h.response({
             status: 'success',
-            message: 'Materi behasil di tambahkan',
+            message: 'Material berhasil di tambahkan',
             data: {
                 results
             }
@@ -75,14 +110,52 @@ class ContentsHandler {
         return response;
     }
 
+    async putContentsHandler(request, h) {
 
-    // async postContentsMaterialIdHandler(request, h) {
-    //     const { title, description } = request.payload;
+        let contentId = '';
 
-    //     const { id: contentId } = request.params;
+        let dataValidation = {
+            title: request.payload.title,
+            duration: request.payload.duration,
+            description: request.payload.description,
+            video: request.payload.video,
+            level: request.payload.level,
+            categories: request.payload.categories
+        };
 
-    //     return idContent;
-    // }
+        const { id: credentialId } = request.auth.credentials;
+        const { id: idContent } = request.params;
+
+
+        // validation 
+        await this._service.verifyContentOwner(idContent, credentialId);
+        
+        if (request.payload.imageThumbnail.hapi) {
+            dataValidation.imageThumbnail = request.payload.imageThumbnail.hapi.headers['content-type'];
+
+            this._validator.validateContentPayload(dataValidation);
+
+            const fileName = await this._storageService.writeFile(request.payload.imageThumbnail, request.payload.imageThumbnail.hapi);
+        
+            const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${fileName}`
+
+            contentId = await this._service.putContents(idContent,dataValidation, fileLocation);
+        } else {
+            this._validator.validatePutContentPayload(dataValidation);
+
+            contentId = await this._service.putContents(idContent,dataValidation, request.payload.imageThumbnail);
+        }
+
+        const response = h.response({
+            status: 'success',
+            message: 'Cotent berhasil di rubah',
+            data: {
+              contentId 
+            }
+        })
+        response.code(201);
+        return response;
+    }
 }
 
 module.exports = ContentsHandler;

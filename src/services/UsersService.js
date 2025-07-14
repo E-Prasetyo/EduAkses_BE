@@ -4,6 +4,7 @@ const { nanoid } = require('nanoid');
 const bcrypt = require('bcrypt');
 const NotFoundError = require('../exceptions/NotFoundError');
 const AuthenticationError = require('../exceptions/AuthenticationError');
+const { values } = require('prelude-ls');
  
 class UsersService {
   constructor() {
@@ -92,6 +93,44 @@ class UsersService {
       const result = await this._pool.query(query);
       return result.rows;
   }
+
+  async putDataUsers({ idUser, email, password, fullname }) {
+
+    const query = {
+      text: `UPDATE users SET
+              email=$1,
+              password=$2,
+              fullname=$3
+            WHERE id = $4`,
+      values: [ email, password, fullname, idUser]
+    }
+
+    const result = await this._pool.query(query);
+    
+    if (!result.rowCount) {
+      throw new NotFoundError('Users tidak ditemukan');
+    }
+  }
+
+  async putDataUsersAdmin({ idUser, email, password, fullname, role }) {
+
+    const query = {
+      text: `UPDATE users SET
+              email=$1,
+              password=$2,
+              fullname=$3,
+              role_id = $4
+            WHERE id = $5`,
+      values: [ email, password, fullname, role, idUser]
+    }
+
+    const result = await this._pool.query(query);
+    
+    if (!result.rowCount) {
+      throw new NotFoundError('Users tidak ditemukan');
+    }
+  }
+
 }
 
 module.exports = UsersService;

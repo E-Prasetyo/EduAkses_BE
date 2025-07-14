@@ -25,6 +25,19 @@ const routes = (handler) => [
       }
     }
   },
+   {
+    method: "GET",
+    path: "/api/roles/users",
+    handler: (request, h) => handler.getRolesUsersHandler(request, h),
+    options: {
+      auth: 'eduaksessapp_jwt',
+      plugins: {
+        hapiAclAuth: {
+          roles: ['user','admin']
+        }
+      }
+    }
+  },
   {
     method: "PUT",
     path: "/api/roles/{id}",
