@@ -24,7 +24,7 @@ const routes = (handler) => [
         path: "/api/contents",
         handler: (request, h) => handler.getAllContentsHandler(request, h),
         options: {
-            auth: 'eduaksessapp_jwt',
+            auth: false,
             plugins: {
                 hapiAclAuth: {
                     secure: false
