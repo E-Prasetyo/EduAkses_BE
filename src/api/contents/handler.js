@@ -19,11 +19,9 @@ class ContentsHandler {
         this._validator.validateContentPayload(dataValidation);
 
         const { id: credentialId } = request.auth.credentials;
-        const fileName = await this._storageService.writeFile(request.payload.imageThumbnail, request.payload.imageThumbnail.hapi);
+        const fileLocation = await this._storageService.writeFile(request.payload.imageThumbnail, request.payload.imageThumbnail.hapi);
         
-        const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${fileName}`
-
-        const contentId = await this._service.postContents(dataValidation, credentialId, fileLocation);
+        const contentId = await this._service.postContents(dataValidation, credentialId, fileLocation.url);
 
         const response = h.response({
             status: 'success',
@@ -133,9 +131,7 @@ class ContentsHandler {
 
             this._validator.validateContentPayload(dataValidation);
 
-            const fileName = await this._storageService.writeFile(request.payload.imageThumbnail, request.payload.imageThumbnail.hapi);
-        
-            const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${fileName}`
+            const fileLocation = await this._storageService.writeFile(request.payload.imageThumbnail, request.payload.imageThumbnail.hapi);
 
             contentId = await this._service.putContents(idContent,dataValidation, fileLocation);
         } else {

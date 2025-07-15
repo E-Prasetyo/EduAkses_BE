@@ -1,25 +1,50 @@
-const fs = require('fs');
+const { Storage } = require('@google-cloud/storage');
+const config = require('../../config/config');
  
 class StorageService {
-  constructor(folder) {
-    this._folder = folder;
- 
-    if (!fs.existsSync(folder)) {
-      fs.mkdirSync(folder, { recursive: true });
-    }
+  constructor() {
+    this._storage = new Storage({
+      keyFilename: config.gcp.googleApplicationCredentials,
+      projectId: config.gcp.projectId,
+    });
+
+    this._bucket = this._storage.bucket(config.gcp.gcsBucket);
   }
  
-  writeFile(file, meta) {
-    const filename = +new Date() + meta.filename;
-    const path = `${this._folder}/${filename}`;
- 
-    const fileStream = fs.createWriteStream(path);
- 
+ async writeFile(file, meta) {
+    const gcsFile = this._bucket.file(meta.filename);
+
     return new Promise((resolve, reject) => {
-      fileStream.on('error', (error) => reject(error));
-      file.pipe(fileStream);
-      file.on('end', () => resolve(filename));
+      const writeStream = gcsFile.createWriteStream({
+        resumable: false,
+        gzip: true,
+        metadata: {
+          contentType: meta.headers['content-type'],
+        },
+      });
+
+      file.pipe(writeStream)
+        .on('finish', async () => {
+          try {
+            const url = await this.createPreSignedUrl(meta.filename);
+            resolve({ success: true, filename: meta.filename, url });
+          } catch (err) {
+            reject(new Error('GCS URL error: ' + err.message));
+          }
+        })
+        .on('error', (err) => {
+          reject(new Error('Upload failed: ' + err.message));
+        });
     });
+  }
+ 
+  async createPreSignedUrl(filename) {
+   const [url] = await this._bucket.file(filename).getSignedUrl({
+      action: 'read',
+      expires: Date.now() + 1000 * 60 * 60, // 1 hour
+    });
+
+    return url;
   }
 }
  

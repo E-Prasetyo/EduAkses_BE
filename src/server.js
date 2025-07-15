@@ -4,6 +4,7 @@ const Jwt = require('@hapi/jwt');
 const AclAuth = require('hapi-acl-auth');
 const Inert = require('@hapi/inert');
 const path = require('path');
+const config = require('./config/config');
 
 //users
 const users = require('./api/users');
@@ -32,9 +33,16 @@ const contents = require('./api/contents');
 const ContentsService = require('./services/ContentsService');
 const ContentsValidator = require('./validator/contents');
 
+// contents
+const quizzes = require('./api/quizzes');
+const QuizzesService = require('./services/QuizzesService');
+const QuizzesValidator = require('./validator/quiz');
+
+
 // uploads
 const uploads = require('./api/uploads');
 const StorageService = require('./services/storage/StorageService');
+//const StorageService = require('./services/storage/StorageService-lokal');
 const UploadsValidator = require('./validator/uploads');
 const AuthenticationError = require('./exceptions/AuthenticationError');
 
@@ -44,11 +52,13 @@ const init = async () => {
   const rolesService = new RolesService();
   const categoriesService = new CategoriesService();
   const contentsService = new ContentsService(usersService);
-  const storageService = new StorageService(path.resolve(__dirname, 'uploads/images'));
-
+  const storageService = new StorageService();
+  //const storageService = new StorageService(path.resolve(__dirname, 'uploads/images'));
+  const quizzesService = new QuizzesService();
+  
   const server = Hapi.server({
-    port: process.env.PORT,
-    host: process.env.HOST,
+    port: config.app.port,
+    host: config.app.host,
     routes: {
       cors: {
         origin: ['*'],
@@ -90,7 +100,7 @@ const init = async () => {
       aud: false,
       iss: false,
       sub: false,
-      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+      maxAgeSec: config.jwt.accessTokenAge,
     },
     validate: (artifacts) => ({
       isValid: true,
@@ -147,6 +157,14 @@ const init = async () => {
         validator: UploadsValidator,
       },
     },
+    {
+      plugin: quizzes,
+      options: {
+        service: quizzesService,
+        validator: QuizzesValidator,
+      },
+    },
+
   ]);
 
   server.ext('onPreResponse', (request, h) => {
@@ -154,7 +172,7 @@ const init = async () => {
     const { response } = request;
 
     if (response instanceof Error) {
-      
+      console.log(response);
       if (response.message) {
         console.log(response.message);
       }

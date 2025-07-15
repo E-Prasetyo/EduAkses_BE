@@ -30,10 +30,11 @@ const routes = (handler) => [
     path: "/api/roles/users",
     handler: (request, h) => handler.getRolesUsersHandler(request, h),
     options: {
-      auth: 'eduaksessapp_jwt',
+      auth: false,
       plugins: {
         hapiAclAuth: {
-          roles: ['user','admin']
+          // roles: ['user','admin']
+          secure: false
         }
       }
     }

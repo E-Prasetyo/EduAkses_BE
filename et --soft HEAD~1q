@@ -1,0 +1,134 @@
+[33mcommit 76e317485991cc0d2d807d0d8e827d10ccf03c54[m[33m ([m[1;36mHEAD -> [m[1;32mPras[m[33m)[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Wed Jul 16 01:58:28 2025 +0700
+
+    sikronisase dengan cloud sql dan google bucket
+
+[33mcommit 05cae212465ce58a843a24917615fd8a91554e76[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Wed Jul 16 01:51:07 2025 +0700
+
+    sikronisase dengan cloud sql dan google bucket
+
+[33mcommit 22f512cb9f8680eac0385e684050a2c1071391cd[m[33m ([m[1;31morigin/Pras[m[33m)[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Tue Jul 15 00:02:24 2025 +0700
+
+    content free no auth
+
+[33mcommit 0acda6fcde01d63a5c00b344319e5e98c1a13317[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Mon Jul 14 23:35:41 2025 +0700
+
+    content free
+
+[33mcommit 4a90b84143973eb8cac56081f5db5a87a26e1cf4[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Mon Jul 14 23:30:32 2025 +0700
+
+    content free
+
+[33mcommit 17e3a23d492a3621334dab1ad07b9287da125e3c[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Mon Jul 14 21:05:07 2025 +0700
+
+    coba deploy
+
+[33mcommit 5f2d3f7318ea38a993f6ab8b3a1885575838f86d[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Mon Jul 14 21:01:34 2025 +0700
+
+    fo build gcp
+
+[33mcommit 877423cb0bb3099f25dd8a3ee899134a4f30b8a1[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Mon Jul 14 08:38:01 2025 +0700
+
+    add table quiz
+
+[33mcommit 17951e543d2ef0484e935982d429626bbeabe290[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Sun Jul 13 18:27:08 2025 +0700
+
+    add content,material,ctegorries
+
+[33mcommit aad3ca20fef91e2c68b4cd60291b34a227164c70[m[33m ([m[1;31morigin/development[m[33m)[m
+Merge: f97e142 734d147
+Author: E Prasetyo <67994910+E-Prasetyo@users.noreply.github.com>
+Date:   Fri Jul 11 18:14:09 2025 +0700
+
+    Merge pull request #3 from E-Prasetyo/Pras
+    
+    add role API and autorisasinya
+
+[33mcommit 734d14797c06c8213788344bc7765805fd851c7e[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Fri Jul 11 17:43:48 2025 +0700
+
+    add role API and autorisasinya
+
+[33mcommit f97e142462c1881ad5e475e375087d0660a42f46[m
+Merge: 8d7f9d2 a808d63
+Author: E Prasetyo <67994910+E-Prasetyo@users.noreply.github.com>
+Date:   Tue Jul 1 18:15:59 2025 +0700
+
+    Merge pull request #2 from EduAkses/Pras
+    
+    Login dan Register
+
+[33mcommit a808d635d82644dfe5c5581f931691f9fd421d40[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Tue Jul 1 18:14:45 2025 +0700
+
+    Login dan Register
+
+[33mcommit 8d7f9d2617b6e817b1c65afa21a0e70f1e5d88cb[m
+Merge: d166cff e39435b
+Author: E Prasetyo <67994910+E-Prasetyo@users.noreply.github.com>
+Date:   Sat Jun 21 20:44:25 2025 +0700
+
+    Merge pull request #1 from EduAkses/Pras
+    
+    Manambahkan text, done
+
+[33mcommit e39435ba3a138a7bb7dd42dd7f1bc04ceae8f514[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Sat Jun 21 20:43:04 2025 +0700
+
+    Manambahkan text
+
+[33mcommit d166cffc244b58eaf23bc29793d3eb5c0777b167[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Sat Jun 21 03:19:46 2025 +0700
+
+    setup proyek
+
+[33mcommit 7d23ca51ff92b0033aebb4c75c9635952259fd90[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Sat Jun 21 03:18:34 2025 +0700
+
+    setup proyek
+
+[33mcommit 3de5ca09555ded768708a92d20d7ab8451d482e4[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Sat Jun 21 03:17:39 2025 +0700
+
+    setup proyek
+
+[33mcommit 3630964bb62d5b38f75ef75802169da5fce4375c[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Sat Jun 21 03:10:51 2025 +0700
+
+    setup proyek
+
+[33mcommit dc3f4aca4ad31ff88122a0e5f7ca59e669a95282[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Sat Jun 21 03:09:49 2025 +0700
+
+    setup proyek
+
+[33mcommit 453450a4fbdc0949b3bf0226d48787a2a32c60e8[m
+Author: E-Prasetyo <tarsisiusekoprasetyo11@gmail.com>
+Date:   Sat Jun 21 03:00:02 2025 +0700
+
+    setup awal project
