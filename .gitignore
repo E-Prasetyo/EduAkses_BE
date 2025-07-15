@@ -1,5 +1,10 @@
+.env
+
+# Ignore GCP credentials
+src/config/credentials.json
+
+
 node_modules
 *node_modules/*
 notes-api-webserver.pem
 
-.env

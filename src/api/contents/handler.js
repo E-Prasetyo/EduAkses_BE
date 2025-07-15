@@ -133,7 +133,7 @@ class ContentsHandler {
 
             const fileLocation = await this._storageService.writeFile(request.payload.imageThumbnail, request.payload.imageThumbnail.hapi);
 
-            contentId = await this._service.putContents(idContent,dataValidation, fileLocation);
+            contentId = await this._service.putContents(idContent,dataValidation, fileLocation.url);
         } else {
             this._validator.validatePutContentPayload(dataValidation);
 
