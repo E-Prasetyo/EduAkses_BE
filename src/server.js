@@ -6,47 +6,49 @@ const Inert = require("@hapi/inert");
 const path = require("path");
 const config = require("./config/config");
 
-//users
+// Modul pengguna
 const users = require("./api/users");
 const UsersService = require("./services/UsersService");
 const UsersValidator = require("./validator/users");
-const ClientError = require("./exceptions/ClientError");
 
-// authentications
+// Modul autentikasi
 const authentications = require("./api/authentications");
 const AuthenticationsService = require("./services/AuthenticationsService");
 const TokenManager = require("./tokenize/TokenManager");
 const AuthenticationsValidator = require("./validator/authentications");
 
-// roles
+// Modul roles
 const roles = require("./api/roles");
 const RolesService = require("./services/RolesService");
 const RoleValidator = require("./validator/roles");
 
-// categories
+// Modul kategori
 const categories = require("./api/categories");
 const CategoriesService = require("./services/CategoriesService");
 const CategoriesValidator = require("./validator/categories");
 
-// contents
+// Modul konten
 const contents = require("./api/contents");
 const ContentsService = require("./services/ContentsService");
 const ContentsValidator = require("./validator/contents");
 
-// contents
+// Modul kuis
 const quizzes = require("./api/quizzes");
 const QuizzesService = require("./services/QuizzesService");
 const QuizzesValidator = require("./validator/quiz");
 
-// forum
+// Modul forum
 const forums = require("./api/forums");
 const ForumsService = require("./services/ForumsService");
+const ForumsValidator = require("./validator/forums");
 
-// uploads
+// Modul upload (lokal)
 const uploads = require("./api/uploads");
-const StorageService = require("./services/storage/StorageService");
-//const StorageService = require('./services/storage/StorageService-lokal');
+const StorageService = require("./services/storage/StorageService-lokal");
 const UploadsValidator = require("./validator/uploads");
+
+// Error handler
+const ClientError = require("./exceptions/ClientError");
 const AuthenticationError = require("./exceptions/AuthenticationError");
 
 const init = async () => {
@@ -55,8 +57,11 @@ const init = async () => {
   const rolesService = new RolesService();
   const categoriesService = new CategoriesService();
   const contentsService = new ContentsService(usersService);
-  const storageService = new StorageService();
-  //const storageService = new StorageService(path.resolve(__dirname, 'uploads/images'));
+
+  const storageService = new StorageService(
+    path.resolve(__dirname, "../uploads/images")
+  );
+
   const quizzesService = new QuizzesService();
   const forumsService = new ForumsService();
 
@@ -70,27 +75,17 @@ const init = async () => {
     },
   });
 
-  // registrasi plugin eksternal
+  // Registrasi plugin eksternal
   await server.register([
-    {
-      plugin: Jwt,
-    },
-    {
-      plugin: Inert,
-    },
+    Jwt,
+    Inert,
     {
       plugin: AclAuth,
       options: {
-        handler: async function (request) {
-          return {
-            roles: request.auth.credentials.role,
-          };
-        },
-        // optional, dy default a simple 403 will be returned when not authorized
-        forbiddenPageFunction: async function (credentials, request, h) {
-          // some fancy "logging"
-          // console.log(credentials)
-          // some fancy error page
+        handler: async (request) => ({
+          roles: request.auth.credentials.role,
+        }),
+        forbiddenPageFunction: async (credentials, request, h) => {
           throw new AuthenticationError(
             `${request.auth.credentials.role}, Not Authorized!`
           );
@@ -99,7 +94,7 @@ const init = async () => {
     },
   ]);
 
-  // mendefinisikan strategy autentikasi jwt
+  // Autentikasi JWT
   server.auth.strategy("eduaksessapp_jwt", "jwt", {
     keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
@@ -117,13 +112,11 @@ const init = async () => {
     }),
   });
 
+  // Registrasi plugin internal
   await server.register([
     {
       plugin: users,
-      options: {
-        service: usersService,
-        validator: UsersValidator,
-      },
+      options: { service: usersService, validator: UsersValidator },
     },
     {
       plugin: authentications,
@@ -136,17 +129,11 @@ const init = async () => {
     },
     {
       plugin: roles,
-      options: {
-        service: rolesService,
-        validator: RoleValidator,
-      },
+      options: { service: rolesService, validator: RoleValidator },
     },
     {
       plugin: categories,
-      options: {
-        service: categoriesService,
-        validator: CategoriesValidator,
-      },
+      options: { service: categoriesService, validator: CategoriesValidator },
     },
     {
       plugin: contents,
@@ -158,61 +145,48 @@ const init = async () => {
     },
     {
       plugin: uploads,
-      options: {
-        service: storageService,
-        validator: UploadsValidator,
-      },
+      options: { service: storageService, validator: UploadsValidator },
     },
     {
       plugin: quizzes,
-      options: {
-        service: quizzesService,
-        validator: QuizzesValidator,
-      },
+      options: { service: quizzesService, validator: QuizzesValidator },
     },
     {
       plugin: forums,
-      options: {
-        service: forumsService,
-      },
+      options: { service: forumsService, validator: ForumsValidator },
     },
   ]);
 
+  // Error Handling
   server.ext("onPreResponse", (request, h) => {
     const { response } = request;
 
     if (response instanceof Error) {
-      console.log(response);
-      if (response.message) {
-        console.log(response.message);
-      }
+      console.error(response);
 
       if (response instanceof ClientError) {
-        const newResponse = h.response({
-          status: "fail",
-          message: response.message,
-        });
-        newResponse.code(response.statusCode);
-        return newResponse;
+        return h
+          .response({ status: "fail", message: response.message })
+          .code(response.statusCode);
       }
 
       if (!response.isServer) {
         return h.continue;
       }
 
-      const newResponse = h.response({
-        status: "error",
-        message: "terjadi kegagalan pada server kami",
-      });
-      newResponse.code(500);
-      return newResponse;
+      return h
+        .response({
+          status: "error",
+          message: "Terjadi kegagalan pada server kami",
+        })
+        .code(500);
     }
 
     return h.continue;
   });
 
   await server.start();
-  console.log(`Server telah berjalan pada ${server.info.uri}`);
+  console.log(`🚀 Server berjalan di ${server.info.uri}`);
 };
 
 init();

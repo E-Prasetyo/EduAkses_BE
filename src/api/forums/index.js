@@ -3,8 +3,9 @@ const ForumsHandler = require("./handler");
 
 module.exports = {
   name: "forums",
-  register: async (server, { service }) => {
-    const handler = new ForumsHandler(service);
-    server.route(routes(handler));
+  version: "1.0.0",
+  register: async (server, { service, validator }) => {
+    const forumsHandler = new ForumsHandler(service, validator);
+    server.route(routes(forumsHandler));
   },
 };
